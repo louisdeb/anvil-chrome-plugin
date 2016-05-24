@@ -6,9 +6,10 @@ chrome.app.runtime.onLaunched.addListener(function() {
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
 
-    if(request.getAdapterStateAvailable) {
+    if(request.getAdapterStateInfo) {
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
-        sendResponse({adapterStateAvailable: adapterInfo.available});
+        console.log('returning info');
+        sendResponse({info: adapterInfo});
       });
     }
 

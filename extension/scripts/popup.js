@@ -2,10 +2,16 @@ var anvilAppId = "ldncnaddidblggfmabnfllmjhmagkdoh";
 
 $(document).ready(function() {
 
-  /* Ask whether there is a available bluetooth device. */
-  chrome.runtime.sendMessage(anvilAppId, {getAdapterStateAvailable: true},
+  /* Get bluetooth adapter info. */
+  chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true},
     function(response) {
-      $("#output").text(response.adapterStateAvailable);
+      $("#available").text("adapter available: " + response.info.available);
+
+      $("#powered").text("adapter powered: " + response.info.powered);
+
+      $("#name").text("adapter name: " + response.info.name);
+
+      $("#discovering").text("adapter discovering: " + response.info.discovering);
     });
 
   $('#findDeviceButton').click(findDevice);
@@ -16,8 +22,6 @@ function findDevice() {
     $('#findingDevice').fadeIn('fast', false);
   });
 
-  $('body').animate({
-    height: '400px'
-  }, 500, false);
+  
 
 }
