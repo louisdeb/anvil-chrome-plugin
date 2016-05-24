@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
 
-  "name": "Anvil",
+  "name": "Anvil Extension",
   "description": "This extension uses your iOS device as a game controller.",
   "version": "1.0",
 

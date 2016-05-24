@@ -1,0 +1,23 @@
+{
+  "manifest_version": 2,
+
+  "name": "Anvil App",
+  "description": "This is a background app to be used by the Anvil Extension.",
+  "version": "1.0",
+
+  "icons": {
+    "16": "assets/icon.png",
+    "48": "assets/icon.png",
+    "128": "assets/icon.png"
+  },
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+
+  "bluetooth": {
+    "low_energy": true,
+    "uuids": ["180a"]
+  }
+}
