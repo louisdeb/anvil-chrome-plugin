@@ -13,5 +13,21 @@ chrome.runtime.onMessageExternal.addListener(
       });
     }
 
+    if(request.startDiscovering) {
+      console.log('discovering');
+      chrome.bluetooth.getAdapterState(function(adapterInfo) {
+        if(adapterInfo.available && adapterInfo.powered && !adapterInfo.discovering)
+          chrome.bluetooth.startDiscovery();
+      });
+    }
+
+    if(request.stopDiscovering) {
+      console.log('stopping discovery');
+      chrome.bluetooth.getAdapterState(function(adapterInfo)) {
+        if(adapterInfo.discovering)
+          chrome.bluetooth.stopDiscovery();
+      };
+    }
+
     return true; // Required to keep sendResponse valid.
   });

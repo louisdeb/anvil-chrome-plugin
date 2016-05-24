@@ -18,10 +18,15 @@ $(document).ready(function() {
 });
 
 function findDevice() {
-  $('#findDeviceButton').fadeOut('fast', function() {
-    $('#findingDevice').fadeIn('fast', false);
+
+  chrome.runtime.sendMessage(anvilAppId, {startDiscovering: true}, function(response) {
+    $('#findDeviceButton').fadeOut('fast', function() {
+      $('#findingDevice').fadeIn('fast', false);
+    });
   });
 
-  
+  chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true}, function(response) {
+    $("#discovering").text("adapter discovering: " + response.info.discovering);
+  });
 
 }
