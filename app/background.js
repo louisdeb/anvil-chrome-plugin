@@ -47,11 +47,17 @@ chrome.runtime.onMessageExternal.addListener(
 );
 
 var devices = [];
+var uuid = 'C93FC016-11E3-4FF2-9CE1-D559AD8828F7';
 
 chrome.bluetooth.onDeviceAdded.addListener(function(device) {
+  if($.inArray(device.address, devices) != -1)
+    return;
+
+  // if($.inArray(uuid, device.uuids) == -1)
+    // return;
+
   console.log('device added: ' + device.address);
-  if($.inArray(device.address, devices) == -1) {
-    devices.push(device.address);
-    chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: true}, function(response) {});
-  }
+  console.log('device uuids: ' + device.uuids);
+  devices.push(device.address);
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: true}, function(response) {});
 });
