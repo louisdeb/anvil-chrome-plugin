@@ -46,8 +46,12 @@ chrome.runtime.onMessageExternal.addListener(
   }
 );
 
+var devices = [];
+
 chrome.bluetooth.onDeviceAdded.addListener(function(device) {
-  // Maybe perform some logic on the device to make sure it's not invalid, or unnecessary.
-  // e.g. if we add a device that we already know, or the device is unknown.
-  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: true}, function(response) {});
+  console.log('device added: ' + device.address);
+  if($.inArray(device.address, devices) == -1) {
+    devices.push(device.address);
+    chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: true}, function(response) {});
+  }
 });
