@@ -49,8 +49,9 @@ function populateDeviceList(deviceInfos) {
   var list = $('#device-list');
   $(list).empty();
   $.each(deviceInfos, function(i) {
-    var li = $('<button type="button" class="list-group-item"/>').text(deviceInfos[i].name).appendTo(list);
+    var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', deviceInfos[i].address).text(deviceInfos[i].name).appendTo(list);
   });
+  $('.device-button').click(deviceSelected);
 }
 
 /* When the App notifies us that a new device has been discovered, we get the devices. */
@@ -62,3 +63,10 @@ chrome.runtime.onMessageExternal.addListener(
 );
 
 // Possibly add a function to stop discovery when the extension window is closed.
+
+/* Called when a button in the device list is clicked.
+   event.target provides the button element. */
+function deviceSelected() {
+  var button = event.target;
+  $('#device-click').text(button.id);
+}
