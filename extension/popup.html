@@ -5,7 +5,9 @@
     <title>Anvil</title>
     <script src='scripts/jquery.js'></script>
     <script src='scripts/popup.js'></script>
+    <script src='bootstrap/js/bootstrap.js'></script>
     <link href='styles.css' rel='stylesheet' type='text/css'>
+    <link href='bootstrap/css/bootstrap.css' rel='stylesheet' type='text/css'>
   </head>
 
   <body>
@@ -14,10 +16,10 @@
     </header>
 
     <hr>
-    <h1 id='available'>failed avaiable</h1>
-    <h1 id='powered'>failed powered</h1>
-    <h1 id='name'>failed name</h1>
-    <h1 id='discovering'>failed discovering</h1>
+    <h3 id='available'>failed avaiable</h3>
+    <h3 id='powered'>failed powered</h3>
+    <h3 id='name'>failed name</h3>
+    <h3 id='discovering'>failed discovering</h3>
     <hr>
 
     <button id='findDeviceButton'>Find Device</button>
@@ -26,7 +28,10 @@
 
     <h3 id='num-devices'></h3>
 
-    <ul id="devices"></ul>
+    <h1>Devices</h1>
+    <div class='list-group' id='device-list'>
+
+    </div>
 
 
   </body>
