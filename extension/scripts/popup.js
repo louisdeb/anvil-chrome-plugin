@@ -13,6 +13,8 @@ $(document).ready(function() {
       $('#discovering').text('adapter discovering: ' + response.info.discovering);
     });
 
+  getDevices();
+
   $('#findDeviceButton').click(findDevice);
   $('#stopDiscovering').click(stopDiscovering);
 });
