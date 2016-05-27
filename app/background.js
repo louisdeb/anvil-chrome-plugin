@@ -1,9 +1,5 @@
 var anvilExtensionId = 'llobflkadellajobbhgnoigljggndioi';
 
-chrome.app.runtime.onLaunched.addListener(function() {
-  console.log('loaded app');
-});
-
 /* Listens for single messages, servicing them. */
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
@@ -33,13 +29,8 @@ chrome.runtime.onMessageExternal.addListener(
 
     if(request.getDevices) {
       console.log('returning devices');
-      chrome.bluetooth.getDevices(function(deviceInfos) {
-        console.log('num devices: ' + deviceInfos.length);
-        for(i = 0; i < deviceInfos.length; i++) {
-          console.log(deviceInfos[i].name);
-        }
-        sendResponse(deviceInfos);
-      });
+      console.log('amount: ' + devices.length);
+      sendResponse(devices);
     }
 
     return true; // Required to keep sendResponse valid.
@@ -47,10 +38,11 @@ chrome.runtime.onMessageExternal.addListener(
 );
 
 var devices = [];
+var addresses = [];
 var uuid = 'C93FC016-11E3-4FF2-9CE1-D559AD8828F7';
 
 chrome.bluetooth.onDeviceAdded.addListener(function(device) {
-  if($.inArray(device.address, devices) != -1)
+  if($.inArray(device.address, addresses) != -1)
     return;
 
   // if($.inArray(uuid, device.uuids) == -1)
@@ -58,6 +50,7 @@ chrome.bluetooth.onDeviceAdded.addListener(function(device) {
 
   console.log('device added: ' + device.address);
   console.log('device uuids: ' + device.uuids);
-  devices.push(device.address);
-  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: true}, function(response) {});
+  devices.push(device);
+  addresses.push(device.address);
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: device}, function(response) {});
 });

@@ -1,16 +1,12 @@
 var anvilAppId = 'ldncnaddidblggfmabnfllmjhmagkdoh';
-var devices = [];
 
 $(document).ready(function() {
   /* Get bluetooth adapter info. */
   chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true},
     function(response) {
       $('#available').text('adapter available: ' + response.info.available);
-
       $('#powered').text('adapter powered: ' + response.info.powered);
-
       $('#name').text('adapter name: ' + response.info.name);
-
       $('#discovering').text('adapter discovering: ' + response.info.discovering);
     });
 
@@ -33,34 +29,32 @@ function findDevice() {
 
 function stopDiscovering() {
   chrome.runtime.sendMessage(anvilAppId, {stopDiscovering: true}, function(response) {});
-
   $('#discovering').text('adapter discovering: false');
 }
 
 /* Fetches all discovered devices from the App, and populates the list with them. */
 function getDevices() {
+  console.log('getDevices');
   chrome.runtime.sendMessage(anvilAppId, {getDevices: true}, function(deviceInfos) {
-    devices = deviceInfos;
-    $('#num-devices').text('num devices: ' + deviceInfos.length);
-    populateDeviceList(deviceInfos);
+    console.log('amount: ' + deviceInfos.length);
+    $.each(deviceInfos, function(i) {
+      addDevice(deviceInfos[i]);
+    });
   });
 }
 
-/* Instead of emptying the list each time, we should try and just fetch new discoveries and add those. Currently we empty the list and fetch all discoveries, and then repopulate the list. */
-function populateDeviceList(deviceInfos) {
+function addDevice(device) {
   var list = $('#device-list');
-  $(list).empty();
-  $.each(deviceInfos, function(i) {
-    var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', deviceInfos[i].address).text(deviceInfos[i].name).appendTo(list);
-  });
+  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
   $('.device-button').click(deviceSelected);
 }
 
 /* When the App notifies us that a new device has been discovered, we get the devices. */
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    if(request.deviceAdded)
-      getDevices(); // Should just add the single device added, instead of getting all devices.
+    if('null' != request.deviceAdded) {
+      addDevice(request.deviceAdded);
+    }
   }
 );
 
@@ -76,7 +70,5 @@ function deviceSelected() {
   //yellow: FFF85F
   //green: 9EF85F
 
-  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {
-
-  });
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {});
 }
