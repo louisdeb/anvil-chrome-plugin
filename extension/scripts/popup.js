@@ -1,4 +1,5 @@
 var anvilAppId = 'ldncnaddidblggfmabnfllmjhmagkdoh';
+var devices = [];
 
 $(document).ready(function() {
   /* Get bluetooth adapter info. */
@@ -39,6 +40,7 @@ function stopDiscovering() {
 /* Fetches all discovered devices from the App, and populates the list with them. */
 function getDevices() {
   chrome.runtime.sendMessage(anvilAppId, {getDevices: true}, function(deviceInfos) {
+    devices = deviceInfos;
     $('#num-devices').text('num devices: ' + deviceInfos.length);
     populateDeviceList(deviceInfos);
   });
@@ -58,7 +60,7 @@ function populateDeviceList(deviceInfos) {
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if(request.deviceAdded)
-      getDevices();
+      getDevices(); // Should just add the single device added, instead of getting all devices.
   }
 );
 
@@ -68,5 +70,13 @@ chrome.runtime.onMessageExternal.addListener(
    event.target provides the button element. */
 function deviceSelected() {
   var button = event.target;
-  $('#device-click').text(button.id);
+  var id = button.id;
+  $('#device-click').text(id);
+  $(button).css('background', '#FFF85F');
+  //yellow: FFF85F
+  //green: 9EF85F
+
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {
+
+  });
 }
