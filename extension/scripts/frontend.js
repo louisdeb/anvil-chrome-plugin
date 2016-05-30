@@ -22,13 +22,6 @@ function stopAnimateDiscovering() {
   $('#device-title').text('Devices');
 }
 
-function addDevice(device) {
-  var list = $('#device-list');
-  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
-  $('.device-button').click(deviceSelected);
-  return button;
-}
-
 function setButtonConnecting(button) {
   $(button).css('background', connectingYellow);
 }

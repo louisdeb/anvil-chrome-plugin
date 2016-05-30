@@ -56,23 +56,31 @@ function getDevices() {
   });
 }
 
+function addDevice(device) {
+  var list = $('#device-list');
+  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
+  $('.device-button').click(deviceSelected);
+  return button;
+}
+
 /* Called when a button in the device list is clicked.
    event.target provides the button element. */
 function deviceSelected() {
+  console.log('device selected');
   var button = event.target;
+  var id = button.id;
   $('#device-click').text(button.id);
   setButtonConnecting(button);
 
-  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id},
-  function(response) {});
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {});
 }
 
 /* The app passes us a device which has just been added. We then add it to
-   the list. */
+   the list.*/
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    if('null' != request.deviceAdded) {
+    if('null' != request.deviceAdded)
       addDevice(request.deviceAdded);
-    }
+
   }
 );
