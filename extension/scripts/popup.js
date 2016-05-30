@@ -1,4 +1,6 @@
 var anvilAppId = 'ldncnaddidblggfmabnfllmjhmagkdoh';
+var connectingYellow = '#FFF85F';
+var connectedGreen = '#9EF85F';
 
 $(document).ready(function() {
   /* Get bluetooth adapter info. */
@@ -32,13 +34,20 @@ function stopDiscovering() {
   $('#discovering').text('adapter discovering: false');
 }
 
-/* Fetches all discovered devices from the App, and populates the list with them. */
+/* Fetches all discovered devices and connecting addresses from the App.
+   When populating the list, it checks whether to set the button to yellow
+   to indicate connecting. */
 function getDevices() {
   console.log('getDevices');
   chrome.runtime.sendMessage(anvilAppId, {getDevices: true}, function(deviceInfos) {
     console.log('amount: ' + deviceInfos.length);
-    $.each(deviceInfos, function(i) {
-      addDevice(deviceInfos[i]);
+
+    chrome.runtime.sendMessage(anvilAppId, {getConnectingAddresses: true}, function(connectingAddresses) {
+      $.each(deviceInfos, function(i) {
+        var button = addDevice(deviceInfos[i]);
+        if($.inArray(deviceInfos[i].address, connectingAddresses) != -1)
+          setButtonConnecting(button);
+      });
     });
   });
 }
@@ -47,6 +56,7 @@ function addDevice(device) {
   var list = $('#device-list');
   var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
   $('.device-button').click(deviceSelected);
+  return button;
 }
 
 /* When the App notifies us that a new device has been discovered, we get the devices. */
@@ -66,9 +76,15 @@ function deviceSelected() {
   var button = event.target;
   var id = button.id;
   $('#device-click').text(id);
-  $(button).css('background', '#FFF85F');
-  //yellow: FFF85F
-  //green: 9EF85F
+  setButtonConnecting(button);
 
   chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {});
+}
+
+function setButtonConnecting(button) {
+  $(button).css('background', connectingYellow);
+}
+
+function setButtonConnected(button) {
+  $(button).css('background', connectedGreen);
 }

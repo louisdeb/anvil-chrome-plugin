@@ -10,27 +10,33 @@ chrome.runtime.onMessageExternal.addListener(
         sendResponse({info: adapterInfo});
       });
     }
-
-    if(request.startDiscovering) {
+    else if(request.startDiscovering) {
       console.log('discovering');
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
         if(adapterInfo.available && adapterInfo.powered && !adapterInfo.discovering)
           chrome.bluetooth.startDiscovery();
       });
     }
-
-    if(request.stopDiscovering) {
+    else if(request.stopDiscovering) {
       console.log('stopping discovery');
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
         if(adapterInfo.discovering)
           chrome.bluetooth.stopDiscovery();
       });
     }
-
-    if(request.getDevices) {
+    else if(request.getDevices) {
       console.log('returning devices');
       console.log('amount: ' + devices.length);
       sendResponse(devices);
+    }
+    else if(request.getConnectingAddresses) {
+      console.log('returning connecting addresses');
+      console.log('amount: ' + connectingAddresses.length);
+      sendResponse(connectingAddresses);
+    }
+    else if($.inArray(request.connectionRequested, addresses)) {
+      console.log('connection requested');
+      connectToDevice(request.connectionRequested);
     }
 
     return true; // Required to keep sendResponse valid.
@@ -54,3 +60,13 @@ chrome.bluetooth.onDeviceAdded.addListener(function(device) {
   addresses.push(device.address);
   chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: device}, function(response) {});
 });
+
+var connectingAddresses = [];
+
+function connectToDevice(address) {
+  if($.inArray(address, connectingAddresses) != -1)
+    return;
+
+  console.log('started trying to connect to ' + address);
+  connectingAddresses.push(address);
+}
