@@ -12,7 +12,7 @@
   },
   "app": {
     "background": {
-      "scripts": ["jquery.js", "background.js"]
+      "scripts": ["jquery.js", "connections.js", "background.js"]
     }
   },
 

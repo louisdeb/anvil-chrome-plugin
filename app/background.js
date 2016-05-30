@@ -63,4 +63,5 @@ function connectToDevice(address) {
 
   console.log('started trying to connect to ' + address);
   connectingAddresses.push(address);
+  connect(address);
 }

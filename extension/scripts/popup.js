@@ -66,13 +66,13 @@ function addDevice(device) {
 /* Called when a button in the device list is clicked.
    event.target provides the button element. */
 function deviceSelected() {
-  console.log('device selected');
   var button = event.target;
   var id = button.id;
   $('#device-click').text(button.id);
   setButtonConnecting(button);
 
-  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {});
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id},
+  function(response) {});
 }
 
 /* The app passes us a device which has just been added. We then add it to
@@ -81,6 +81,5 @@ chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if('null' != request.deviceAdded)
       addDevice(request.deviceAdded);
-
   }
 );
