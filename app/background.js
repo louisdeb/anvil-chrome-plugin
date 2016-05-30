@@ -1,4 +1,8 @@
 var anvilExtensionId = 'llobflkadellajobbhgnoigljggndioi';
+var uuid = 'C93FC016-11E3-4FF2-9CE1-D559AD8828F7';
+var devices = [];
+var addresses = [];
+var connectingAddresses = [];
 
 /* Listens for single messages, servicing them. */
 chrome.runtime.onMessageExternal.addListener(
@@ -6,36 +10,28 @@ chrome.runtime.onMessageExternal.addListener(
 
     if(request.getAdapterStateInfo) {
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
-        console.log('returning info');
         sendResponse({info: adapterInfo});
       });
     }
     else if(request.startDiscovering) {
-      console.log('discovering');
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
         if(adapterInfo.available && adapterInfo.powered && !adapterInfo.discovering)
           chrome.bluetooth.startDiscovery();
       });
     }
     else if(request.stopDiscovering) {
-      console.log('stopping discovery');
       chrome.bluetooth.getAdapterState(function(adapterInfo) {
         if(adapterInfo.discovering)
           chrome.bluetooth.stopDiscovery();
       });
     }
     else if(request.getDevices) {
-      console.log('returning devices');
-      console.log('amount: ' + devices.length);
       sendResponse(devices);
     }
     else if(request.getConnectingAddresses) {
-      console.log('returning connecting addresses');
-      console.log('amount: ' + connectingAddresses.length);
       sendResponse(connectingAddresses);
     }
     else if($.inArray(request.connectionRequested, addresses)) {
-      console.log('connection requested');
       connectToDevice(request.connectionRequested);
     }
 
@@ -43,26 +39,24 @@ chrome.runtime.onMessageExternal.addListener(
   }
 );
 
-var devices = [];
-var addresses = [];
-var uuid = 'C93FC016-11E3-4FF2-9CE1-D559AD8828F7';
-
+/* Listens for devices discovered. It stores the device if it is new, and
+   notifies the extension, passing it the device. */
 chrome.bluetooth.onDeviceAdded.addListener(function(device) {
   if($.inArray(device.address, addresses) != -1)
     return;
 
+  // Perform a check for the correct UUID.
   // if($.inArray(uuid, device.uuids) == -1)
     // return;
 
-  console.log('device added: ' + device.address);
-  console.log('device uuids: ' + device.uuids);
   devices.push(device);
   addresses.push(device.address);
-  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: device}, function(response) {});
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: device},
+  function(response) {});
 });
 
-var connectingAddresses = [];
-
+/* Initiates connecting to a device. Will only attempt connection if the device
+   is not already connecting. */
 function connectToDevice(address) {
   if($.inArray(address, connectingAddresses) != -1)
     return;

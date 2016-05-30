@@ -1,11 +1,13 @@
 var anvilAppId = 'ldncnaddidblggfmabnfllmjhmagkdoh';
-var connectingYellow = '#FFF85F';
-var connectedGreen = '#9EF85F';
 
 $(document).ready(function() {
   /* Get bluetooth adapter info. */
   chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true},
     function(response) {
+      if(response.info.discovering)
+        animateDiscovering();
+
+      /* Debug */
       $('#available').text('adapter available: ' + response.info.available);
       $('#powered').text('adapter powered: ' + response.info.powered);
       $('#name').text('adapter name: ' + response.info.name);
@@ -13,36 +15,38 @@ $(document).ready(function() {
     });
 
   getDevices();
-
-  $('#findDeviceButton').click(findDevice);
-  $('#stopDiscovering').click(stopDiscovering);
+  addButtonListeners();
 });
 
-/* Start discovery. */
+/* Assign functions to the click of buttons. */
+function addButtonListeners() {
+  $('#findDeviceButton').click(findDevice);
+  $('#stopDiscovering').click(stopDiscovering);
+}
+
+/* Called to start discovering devices. */
 function findDevice() {
-  chrome.runtime.sendMessage(anvilAppId, {startDiscovering: true}, function(response) {
-    $('#findDeviceButton').fadeOut('fast', function() {
-      $('#findingDevice').fadeIn('fast', false);
-    });
-  });
-
-  $('#discovering').text('adapter discovering: true');
+  animateDiscovering();
+  chrome.runtime.sendMessage(anvilAppId, {startDiscovering: true}, function(response) {});
+  $('#discovering').text('adapter discovering: true'); // Debug
 }
 
+/* Called to stop discovering devices. */
 function stopDiscovering() {
+  stopAnimateDiscovering();
   chrome.runtime.sendMessage(anvilAppId, {stopDiscovering: true}, function(response) {});
-  $('#discovering').text('adapter discovering: false');
+  $('#discovering').text('adapter discovering: false'); // Debug
 }
 
-/* Fetches all discovered devices and connecting addresses from the App.
+/* Fetches all discovered devices and connecting addresses from the app.
    When populating the list, it checks whether to set the button to yellow
-   to indicate connecting. */
+   to indicate connecting.
+   Will eventually also fetch connected devices. */
 function getDevices() {
-  console.log('getDevices');
-  chrome.runtime.sendMessage(anvilAppId, {getDevices: true}, function(deviceInfos) {
-    console.log('amount: ' + deviceInfos.length);
-
-    chrome.runtime.sendMessage(anvilAppId, {getConnectingAddresses: true}, function(connectingAddresses) {
+  chrome.runtime.sendMessage(anvilAppId, {getDevices: true},
+  function(deviceInfos) {
+    chrome.runtime.sendMessage(anvilAppId, {getConnectingAddresses: true},
+    function(connectingAddresses) {
       $.each(deviceInfos, function(i) {
         var button = addDevice(deviceInfos[i]);
         if($.inArray(deviceInfos[i].address, connectingAddresses) != -1)
@@ -52,14 +56,19 @@ function getDevices() {
   });
 }
 
-function addDevice(device) {
-  var list = $('#device-list');
-  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
-  $('.device-button').click(deviceSelected);
-  return button;
+/* Called when a button in the device list is clicked.
+   event.target provides the button element. */
+function deviceSelected() {
+  var button = event.target;
+  $('#device-click').text(button.id);
+  setButtonConnecting(button);
+
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id},
+  function(response) {});
 }
 
-/* When the App notifies us that a new device has been discovered, we get the devices. */
+/* The app passes us a device which has just been added. We then add it to
+   the list. */
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if('null' != request.deviceAdded) {
@@ -67,24 +76,3 @@ chrome.runtime.onMessageExternal.addListener(
     }
   }
 );
-
-// Possibly add a function to stop discovery when the extension window is closed.
-
-/* Called when a button in the device list is clicked.
-   event.target provides the button element. */
-function deviceSelected() {
-  var button = event.target;
-  var id = button.id;
-  $('#device-click').text(id);
-  setButtonConnecting(button);
-
-  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id}, function(response) {});
-}
-
-function setButtonConnecting(button) {
-  $(button).css('background', connectingYellow);
-}
-
-function setButtonConnected(button) {
-  $(button).css('background', connectedGreen);
-}
