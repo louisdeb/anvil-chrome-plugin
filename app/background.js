@@ -1,5 +1,5 @@
 var anvilExtensionId = 'llobflkadellajobbhgnoigljggndioi';
-var uuid = 'C93FC016-11E3-4FF2-9CE1-D559AD8828F7';
+var uuid = 'c93fc016-11e3-4ff2-9ce1-d559ad8828f7';
 var devices = [];
 var addresses = [];
 var connectingAddresses = [];
@@ -46,8 +46,8 @@ chrome.bluetooth.onDeviceAdded.addListener(function(device) {
     return;
 
   // Perform a check for the correct UUID.
-  // if($.inArray(uuid, device.uuids) == -1)
-    // return;
+  if($.inArray(uuid, device.uuids) == -1)
+    return;
 
   devices.push(device);
   addresses.push(device.address);
