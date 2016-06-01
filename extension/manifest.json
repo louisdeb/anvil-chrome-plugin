@@ -11,7 +11,7 @@
   },
 
   "background": {
-       "scripts": ["scripts/jquery.js", "scripts/popup.js"]
+       "scripts": ["scripts/jquery.js", "scripts/frontend.js", "scripts/popup.js"]
   },
 
   "permissions": [

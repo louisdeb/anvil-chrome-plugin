@@ -78,17 +78,15 @@ function deviceSelected() {
    the list.*/
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
-    if(request.deviceAdded != 'null' || request.deviceAdded != undefined) {
+    if(request.deviceAdded != 'null') {
+      console.log('device added');
       $('#device-click').text('wrong');
       addDevice(request.deviceAdded);
     }
-
-    if(request.deviceConnected != 'null') {
-      $('#device-click').text('set device connected');
-      var id = '#' + request.deviceConnected;
-      var button = $(id);
+    else if(request.setConnected != 'null') {
+      console.log('set connected');
+      var buttonId = '#' + request.setConnected;
       setButtonConnected(button);
     }
-
   }
 );

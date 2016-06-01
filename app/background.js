@@ -70,6 +70,6 @@ function connectToDevice(address) {
 function setDeviceConnected(address) {
   console.log('set device connected');
   connectedAddresses.push(address);
-  chrome.runtime.sendMessage(anvilExtensionId, {deviceConnected: address},
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null', setConnected: address},
   function(response) {});
 }
