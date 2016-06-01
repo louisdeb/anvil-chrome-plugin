@@ -32,6 +32,9 @@ chrome.runtime.onMessageExternal.addListener(
     else if(request.getConnectingAddresses) {
       sendResponse(connectingAddresses);
     }
+    else if(request.getConnectedAddresses) {
+      sendResponse(connectedAddresses);
+    }
     else if($.inArray(request.connectionRequested, addresses) != -1) {
       connectToDevice(request.connectionRequested);
     }
@@ -62,13 +65,12 @@ function connectToDevice(address) {
   if($.inArray(address, connectingAddresses) != -1)
     return;
 
-  console.log('started trying to connect to ' + address);
+  console.log('Started connecting to ' + address);
   connectingAddresses.push(address);
   connect(address);
 }
 
 function setDeviceConnected(address) {
-  console.log('set device connected');
   connectedAddresses.push(address);
   chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null', setConnected: address},
   function(response) {});

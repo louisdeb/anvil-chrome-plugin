@@ -27,6 +27,5 @@ function setButtonConnecting(button) {
 }
 
 function setButtonConnected(button) {
-  console.log('setButtonConnected');
   $(button).css('background', connectedGreen);
 }

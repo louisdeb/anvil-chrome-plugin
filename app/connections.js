@@ -4,7 +4,7 @@ function connect(address) {
       console.log(chrome.runtime.lastError.message);
       return;
     }
-    console.log('completed request');
+    console.log('Successfully connected to ' + address);
     setDeviceConnected(address);
   });
 

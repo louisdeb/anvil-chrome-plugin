@@ -47,10 +47,15 @@ function getDevices() {
   function(deviceInfos) {
     chrome.runtime.sendMessage(anvilAppId, {getConnectingAddresses: true},
     function(connectingAddresses) {
-      $.each(deviceInfos, function(i) {
-        var button = addDevice(deviceInfos[i]);
-        if($.inArray(deviceInfos[i].address, connectingAddresses) != -1)
-          setButtonConnecting(button);
+      chrome.runtime.sendMessage(anvilAppId, {getConnectedAddresses: true},
+      function(connectedAddresses) {
+        $.each(deviceInfos, function(i) {
+          var button = addDevice(deviceInfos[i]);
+          if($.inArray(deviceInfos[i].address, connectingAddresses) != -1)
+            setButtonConnecting(button);
+          if($.inArray(deviceInfos[i].address, connectedAddresses) != -1)
+            setButtonConnected(button);
+        });
       });
     });
   });
@@ -79,13 +84,10 @@ function deviceSelected() {
 chrome.runtime.onMessageExternal.addListener(
   function(request, sender, sendResponse) {
     if(request.deviceAdded != 'null') {
-      console.log('device added');
-      $('#device-click').text('wrong');
       addDevice(request.deviceAdded);
     }
     else if(request.setConnected != 'null') {
-      console.log('set connected');
-      var buttonId = '#' + request.setConnected;
+      var button = $(document.getElementById(request.setConnected));
       setButtonConnected(button);
     }
   }
