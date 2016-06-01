@@ -3,6 +3,7 @@ var uuid = 'c93fc016-11e3-4ff2-9ce1-d559ad8828f7';
 var devices = [];
 var addresses = [];
 var connectingAddresses = [];
+var connectedAddresses = [];
 
 /* Listens for single messages, servicing them. */
 chrome.runtime.onMessageExternal.addListener(
@@ -64,4 +65,11 @@ function connectToDevice(address) {
   console.log('started trying to connect to ' + address);
   connectingAddresses.push(address);
   connect(address);
+}
+
+function setDeviceConnected(address) {
+  console.log('set device connected');
+  connectedAddresses.push(address);
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceConnected: address},
+  function(response) {});
 }
