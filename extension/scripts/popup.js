@@ -67,11 +67,10 @@ function addDevice(device) {
    event.target provides the button element. */
 function deviceSelected() {
   var button = event.target;
-  var id = button.id;
   $('#device-click').text(button.id);
   setButtonConnecting(button);
 
-  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: id},
+  chrome.runtime.sendMessage(anvilAppId, {connectionRequested: button.id},
   function(response) {});
 }
 

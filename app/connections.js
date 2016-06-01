@@ -1,11 +1,17 @@
 function connect(address) {
-  console.log('connect');
+  console.log('connect: ' + address);
 
-  chrome.bluetoothLowEnergy.getServices(address, function(services) {
-    console.log('services.length: ' + services.length);
+  chrome.bluetoothLowEnergy.connect(address, function() {
+    if (chrome.runtime.lastError) {
+      console.log(chrome.runtime.lastError.message);
+      return;
+    }
+    console.log('completed request');
   });
 
-  // chrome.bluetoothLowEnergy.connect(address, {persistent: true}, function() {
-  //   console.log('connected to: ' + address);
+  // chrome.bluetoothLowEnergy.getServices(address, function(services) {
+  //   console.log('services.length: ' + services.length);
   // });
+
+  return true;
 }

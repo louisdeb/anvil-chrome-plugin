@@ -31,7 +31,7 @@ chrome.runtime.onMessageExternal.addListener(
     else if(request.getConnectingAddresses) {
       sendResponse(connectingAddresses);
     }
-    else if($.inArray(request.connectionRequested, addresses)) {
+    else if($.inArray(request.connectionRequested, addresses) != -1) {
       connectToDevice(request.connectionRequested);
     }
 
