@@ -70,7 +70,11 @@ function connectToDevice(address) {
   connect(address);
 }
 
+/* Called when a device successfully connects. */
 function setDeviceConnected(address) {
+  connectingAddresses = jQuery.grep(connectingAddresses, function(value) {
+    return value != address;
+  });
   connectedAddresses.push(address);
   chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null', setConnected: address},
   function(response) {});
