@@ -86,10 +86,37 @@ chrome.bluetooth.onDeviceRemoved.addListener(function(device) {
   if($.inArray(uuid, device.uuids) == -1)
     return;
 
-  console.log('device ' + device.address + ' removed');
+  var address = device.address;
+  console.log('device ' + address + ' removed');
 
+  /* Tell extension to remove the device from the list. */
   chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null',
-  setConnected: 'null', deviceRemoved: device.address}, function(response) {});
+  setConnected: 'null', deviceRemoved: address}, function(response) {});
+
+  /* Remove the device from the list its found in. */
+  if($.inArray(device, devices) != -1) {
+    devices = jQuery.grep(devices, function(value) {
+      return value.address != device.address;
+    });
+  }
+
+  if($.inArray(address, addresses) != -1) {
+    addresses = jQuery.grep(addresses, function(value) {
+      return value != address;
+    });
+  }
+
+  if($.inArray(address, connectingAddresses) != -1) {
+    connectingAddresses = jQuery.grep(connectingAddresses, function(value) {
+      return value!= address;
+    });
+  }
+
+  if($.inArray(address, connectedAddresses) != -1) {
+    connectedAddresses = jQuery.grep(connectedAddresses, function(value) {
+      return value != address;
+    });
+  }
 
 });
 
