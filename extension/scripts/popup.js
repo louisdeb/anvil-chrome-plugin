@@ -1,6 +1,7 @@
 var anvilAppId = 'ldncnaddidblggfmabnfllmjhmagkdoh';
 
 $(document).ready(function() {
+
   /* Get bluetooth adapter info. */
   chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true},
     function(response) {
@@ -72,7 +73,6 @@ function addDevice(device) {
    event.target provides the button element. */
 function deviceSelected() {
   var button = event.target;
-  $('#device-click').text(button.id);
   setButtonConnecting(button);
 
   chrome.runtime.sendMessage(anvilAppId, {connectionRequested: button.id},
@@ -89,6 +89,10 @@ chrome.runtime.onMessageExternal.addListener(
     else if(request.setConnected != 'null') {
       var button = $(document.getElementById(request.setConnected));
       setButtonConnected(button);
+    }
+    else if(request.deviceRemoved != 'null') {
+      var button = $(document.getElementById(request.deviceRemoved));
+      button.remove();
     }
   }
 );

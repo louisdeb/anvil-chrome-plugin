@@ -46,11 +46,11 @@ chrome.runtime.onMessageExternal.addListener(
 /* Listens for devices discovered. It stores the device if it is new, and
    notifies the extension, passing it the device. */
 chrome.bluetooth.onDeviceAdded.addListener(function(device) {
-  if($.inArray(device.address, addresses) != -1)
-    return;
-
   // Perform a check for the correct UUID.
   if($.inArray(uuid, device.uuids) == -1)
+    return;
+
+  if($.inArray(device.address, addresses) != -1)
     return;
 
   devices.push(device);
@@ -79,3 +79,25 @@ function setDeviceConnected(address) {
   chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null', setConnected: address},
   function(response) {});
 }
+
+/* Called when a device is removed. (Not called when our app is closed?) */
+chrome.bluetooth.onDeviceRemoved.addListener(function(device) {
+  // Perform a check for the correct UUID.
+  if($.inArray(uuid, device.uuids) == -1)
+    return;
+
+  console.log('device ' + device.address + ' removed');
+
+  chrome.runtime.sendMessage(anvilExtensionId, {deviceAdded: 'null',
+  setConnected: 'null', deviceRemoved: device.address}, function(response) {});
+
+});
+
+/* Constantly called. */
+chrome.bluetooth.onDeviceChanged.addListener(function(device) {
+  // Perform a check for the correct UUID.
+  if($.inArray(uuid, device.uuids) == -1)
+    return;
+
+  // console.log('device changed');
+});
