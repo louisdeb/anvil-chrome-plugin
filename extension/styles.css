@@ -1,3 +1,7 @@
+header {
+  margin-bottom: 30px;
+}
+
 div.device-display {
   width: 100%;
   display: none;
@@ -12,7 +16,7 @@ img#bluetooth {
 div#device-list, #searching {
   float: right;
   width: 70%;
-  margin-right: 0;
+  margin-right: 10px;
 }
 
 div#device-list {

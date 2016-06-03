@@ -19,8 +19,8 @@ function connect(address) {
 
     console.log('Successfully connected to ' + address);
     setDeviceConnected(address);
-    getDeviceService();
-    // getDeviceServices(address);
+    // getDeviceService();
+    getDeviceServices(address);
   });
 
   return true;
@@ -46,6 +46,5 @@ function getDeviceService() {
 function getDeviceServices(address) {
   chrome.bluetoothLowEnergy.getServices(address, function(services) {
     console.log('services.length: ' + services.length);
-
   });
 }

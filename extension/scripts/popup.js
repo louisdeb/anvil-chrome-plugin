@@ -81,5 +81,7 @@ chrome.runtime.onMessageExternal.addListener(
       var button = $(document.getElementById(request.deviceRemoved));
       button.remove();
     }
+
+    return true;
   }
 );
