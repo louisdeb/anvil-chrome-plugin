@@ -9,7 +9,6 @@ $(document).ready(function() {
         hideBluetoothError();
         showDeviceDisplay();
       }
-
     });
 
   getDevices();
@@ -52,9 +51,7 @@ function getDevices() {
 function addDevice(device) {
   hideSearching();
   showDeviceList();
-
-  var list = $('#device-list');
-  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
+  var button = addDeviceButton(device);
   $('.device-button').click(deviceSelected);
   return button;
 }

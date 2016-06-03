@@ -26,3 +26,10 @@ function hideBluetoothError() {
 function showDeviceDisplay() {
   $('.device-display').css('display', 'table');
 }
+
+function addDeviceButton(device) {
+  var list = $('#device-list');
+  var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
+
+  return button;
+}
