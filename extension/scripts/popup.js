@@ -5,38 +5,25 @@ $(document).ready(function() {
   /* Get bluetooth adapter info. */
   chrome.runtime.sendMessage(anvilAppId, {getAdapterStateInfo: true},
     function(response) {
-      if(response.info.discovering)
-        animateDiscovering();
+      if(response.info.available && response.info.powered) {
+        hideBluetoothError();
+        showDeviceDisplay();
+      }
 
-      /* Debug */
-      $('#available').text('adapter available: ' + response.info.available);
-      $('#powered').text('adapter powered: ' + response.info.powered);
-      $('#name').text('adapter name: ' + response.info.name);
-      $('#discovering').text('adapter discovering: ' + response.info.discovering);
     });
 
   getDevices();
-  addButtonListeners();
+  findDevice();
 });
-
-/* Assign functions to the click of buttons. */
-function addButtonListeners() {
-  $('#findDeviceButton').click(findDevice);
-  $('#stopDiscovering').click(stopDiscovering);
-}
 
 /* Called to start discovering devices. */
 function findDevice() {
-  animateDiscovering();
   chrome.runtime.sendMessage(anvilAppId, {startDiscovering: true}, function(response) {});
-  $('#discovering').text('adapter discovering: true'); // Debug
 }
 
 /* Called to stop discovering devices. */
 function stopDiscovering() {
-  stopAnimateDiscovering();
   chrome.runtime.sendMessage(anvilAppId, {stopDiscovering: true}, function(response) {});
-  $('#discovering').text('adapter discovering: false'); // Debug
 }
 
 /* Fetches all discovered devices and connecting addresses from the app.
@@ -63,6 +50,9 @@ function getDevices() {
 }
 
 function addDevice(device) {
+  hideSearching();
+  showDeviceList();
+
   var list = $('#device-list');
   var button = $('<button type="button" class="list-group-item device-button"/>').attr('id', device.address).text(device.name).appendTo(list);
   $('.device-button').click(deviceSelected);

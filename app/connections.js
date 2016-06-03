@@ -1,3 +1,5 @@
+var charUUID = '27b8cd56-0496-498b-aee9-b746e9f74225';
+
 function connect(address) {
 
   /* Connect persistently to the device. */
@@ -17,8 +19,8 @@ function connect(address) {
 
     console.log('Successfully connected to ' + address);
     setDeviceConnected(address);
-
-    getDeviceServices(address);
+    getDeviceService();
+    // getDeviceServices(address);
   });
 
   return true;
@@ -35,8 +37,15 @@ function disconnect(address) {
   })
 }
 
+function getDeviceService() {
+  chrome.bluetoothLowEnergy.getService('c93fc016-11e3-4ff2-9ce1-d559ad8828f7', function() {
+    console.log('got service');
+  });
+}
+
 function getDeviceServices(address) {
   chrome.bluetoothLowEnergy.getServices(address, function(services) {
     console.log('services.length: ' + services.length);
+
   });
 }

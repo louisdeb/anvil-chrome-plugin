@@ -1,20 +1,20 @@
-#findingDevice {
-  display:none;
-}
-
-ul#devices {
-  background: #ddd;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  padding-left: 15px;
-  padding-right: 15px;
-  list-style: none;
-}
-
-ul#devices li {
-  font-size: 18px;
-  padding-top: 3px;
-  border-top: solid white 4px;
-  border-bottom: solid white 2px;
+div.device-display {
   width: 100%;
+  display: none;
+}
+
+img#bluetooth {
+  height: 200px;
+  float: left;
+  margin-right: 10px;
+}
+
+div#device-list, #searching {
+  float: left;
+  width: 70%;
+  margin-right: 0;
+}
+
+div#device-list {
+  display: none;
 }

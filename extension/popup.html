@@ -18,19 +18,18 @@
 
     <hr>
 
-    <button id='findDeviceButton'>Find Device</button>
-    <button id='stopDiscovering'>Stop Discovering</button>
+    <div class='alert alert-danger' id='bluetooth-off'>
+      <strong style='margin-right:5px'>Error!</strong> Please turn on your bluetooth.
+    </div>
 
-    <h1 id='device-title'>Devices</h1>
-    <div class='list-group' id='device-list'></div>
+    <div class='device-display'>
+      <img id='bluetooth' src='assets/bluetooth.gif'></img>
+      <div class='list-group' id='device-list'></div>
 
-    <hr>
-
-    <tt><h5 id='available'>failed avaiable</h5>
-    <h5 id='powered'>failed powered</h5>
-    <h5 id='name'>failed name</h5>
-    <h5 id='discovering'>failed discovering</h5>
-    <h5 id='frontend'>frontend</h5></tt>
+      <div class='alert alert-warning' id='searching'>
+        <strong>Status: </strong> No devices found yet.
+      </div>
+    </div>
 
   </body>
 </html>
