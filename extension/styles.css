@@ -10,7 +10,7 @@ img#bluetooth {
 }
 
 div#device-list, #searching {
-  float: left;
+  float: right;
   width: 70%;
   margin-right: 0;
 }
