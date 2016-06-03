@@ -82,4 +82,6 @@ chrome.runtime.onMessageExternal.addListener(
       button.remove();
     }
   }
+
+  return true;
 );
