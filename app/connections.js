@@ -19,7 +19,6 @@ function connect(address) {
 
     console.log('Successfully connected to ' + address);
     setDeviceConnected(address);
-    // getDeviceService();
     getDeviceServices(address);
   });
 
@@ -37,14 +36,25 @@ function disconnect(address) {
   })
 }
 
-function getDeviceService() {
-  chrome.bluetoothLowEnergy.getService('c93fc016-11e3-4ff2-9ce1-d559ad8828f7', function() {
-    console.log('got service');
-  });
-}
-
 function getDeviceServices(address) {
   chrome.bluetoothLowEnergy.getServices(address, function(services) {
     console.log('services.length: ' + services.length);
+
+    $.each(services, function(index, val) {
+      if(val.uuid == uuid) {
+        console.log('service: ' + val.uuid);
+        console.log('is primary: ' + val.isPrimary);
+        console.log('instance id: ' + val.instanceId);
+        console.log('device address: ' + val.deviceAddress);
+
+        getCharacteristics(val.instanceId);
+      }
+    });
+  });
+}
+
+function getCharacteristics(serviceId) {
+  chrome.bluetoothLowEnergy.getCharacteristics(serviceId, function(characteristics) {
+    console.log('characteristics.length: ' + characteristics.length);
   });
 }
